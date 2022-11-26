@@ -4,7 +4,7 @@ conn = psycopg2.connect(
    port = '5432',
    database = "dict2",
    user = "postgres",
-   password = "****"
+   password = '****'
    )
 
 def read_dict(C):
@@ -17,6 +17,10 @@ def add_word(C, word, translation):
     cur = C.cursor()
     cur.execute(f"INSERT INTO dictionary (word, translation) VALUES ('{word}', '{translation}');")
     cur.close()
+
+def insert_word(C, word, translation):
+    print(f"The word '{word}' with the translation '{translation}' is now inserted")
+
 def delete_word(C, ID):
     cur = C.cursor()
     cur.execute(f"DELETE FROM dictionary WHERE id = '{ID}';")
@@ -29,8 +33,9 @@ def save_dict(C):
 
 # Initial information text
 print('Hello and welcome to the dictionary, available commands:')
-print('  add    - add a phone number\n  list   - list all phone numbers')
-print('  delete - delete a contact\n  quit   - quit the program')
+print('  add    - add a word\n  list   - list dict content')
+print('  insert - insert new word')
+print('  delete - delete a word\n  quit   - quit the program')
 
 
 while True: ## REPL - Read Execute Program Loop
@@ -38,9 +43,13 @@ while True: ## REPL - Read Execute Program Loop
     if cmd == "list":
         print(read_dict(conn))
     elif cmd == "add":
-        name = input("  Word: ")
-        phone = input("  Translation: ")
-        add_word(conn, name, phone)
+        word = input("  Word: ")
+        translation = input("  Translation: ")
+        add_word(conn, word, translation)
+    elif cmd == 'insert':
+        word = input("  Word: ")
+        translation = input("  Translation: ")
+        insert_word(conn, word, translation)
     elif cmd == "delete":
         ID = input("  ID: ")
         delete_word(conn, ID)
